@@ -1,0 +1,565 @@
+﻿/**
+ * ================================
+ * 描述说明 事件管理
+ * @author YHT</br>2018/02/25
+ * @version 1.0.0
+ * ================================
+ */
+
+
+/*EVENT PUBLIC*/
+
+.txt-l {
+	text-align: left;
+}
+
+.txt-r {
+	text-align: right;
+}
+
+.txt-c {
+	text-align: center;
+}
+
+.c-96 {
+	color: #969696;
+}
+
+.likeAmount {
+	color: #e00000;
+}
+
+.active {
+	color: #23527c;
+}
+
+.unActive {
+	color: #969696;
+}
+
+.m-tb-5 {
+	margin: 5px 0;
+}
+
+.m-tb-20{
+	margin-top: 20px;
+}
+
+.p-b-20{
+	padding-bottom: 20px;
+}
+
+.m-r-4 {
+	margin-right: 4px;
+}
+
+.p-r-15 {
+	padding-right: 15px;
+}
+
+.voice-color {
+	color: burlywood;
+}
+
+.voiceTouch{
+	border: solid 1px burlywood!important;
+}
+
+
+/* 事件上报  */
+
+@keyframes move_wave {
+	0% {
+		transform: translateX(0) translateZ(0) scaleY(1)
+	}
+	50% {
+		transform: translateX(-25%) translateZ(0) scaleY(0.55)
+	}
+	100% {
+		transform: translateX(-50%) translateZ(0) scaleY(1)
+	}
+}
+
+.waveWrapper {
+	overflow: hidden;
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	top: 0;
+	margin: auto;
+}
+
+.waveWrapperInner {
+	position: absolute;
+	width: 100%;
+	overflow: hidden;
+	height: 100%;
+	bottom: -1px;
+	background-image: linear-gradient(to top, #dcdcdc 20%, #8e8e8e 80%);
+}
+
+.bgTop {
+	z-index: 15;
+	opacity: 0.5;
+}
+
+.bgMiddle {
+	z-index: 10;
+	opacity: 0.75;
+}
+
+.bgBottom {
+	z-index: 5;
+}
+
+.wave {
+	position: absolute;
+	left: 0;
+	width: 200%;
+	height: 100%;
+	background-repeat: repeat no-repeat;
+	background-position: 0 bottom;
+	transform-origin: center bottom;
+}
+
+.waveTop {
+	background-size: 50% 0px;
+}
+
+.waveAnimation .waveTop {
+	animation: move-wave 3s;
+	-webkit-animation: move-wave 3s;
+	-webkit-animation-delay: 1s;
+	animation-delay: 1s;
+}
+
+.waveMiddle {
+	background-size: 50% 120px;
+}
+
+.waveAnimation .waveMiddle {
+	animation: move_wave 10s linear infinite;
+}
+
+.waveBottom {
+	background-size: 50% 100px;
+}
+
+.waveAnimation .waveBottom {
+	animation: move_wave 15s linear infinite;
+}
+
+
+/*EXPOSURE*/
+
+.event-hd {
+	position: fixed;
+	width: 100%;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	background-color: #fff;
+}
+
+.weui-event {
+	margin-top: 60px;
+}
+
+
+/*点赞、热度、默认*/
+
+.exposure-right-hd {
+	float: right;
+}
+
+
+/*封面图DIV*/
+
+.weui-media-box_appmsg .exposure-img-box {
+	position: relative;
+	width: 80px;
+	height: 80px;
+	line-height: 50px;
+}
+
+
+/*封面图IMG*/
+
+.exposure-img-box img {
+	height: 100%;
+	border-radius: 4px;
+}
+
+.weui-event .weui-media-box__title {
+	margin: 0 0 10px;
+}
+
+
+/*点赞DIV*/
+
+.like-count {
+	margin-left: 5px;
+	padding: 10px;
+}
+
+
+/*底部按钮*/
+
+.exposure-box {
+	position: fixed;
+	right: 15px;
+	width: 64px;
+	height: 64px;
+	-webkit-border-radius: 32px;
+	-ms-border-radius: 32px;
+	border-radius: 32px;
+}
+
+.exposure-report:active {
+	background-color: #4073b1;
+}
+
+.exposure-report {
+	bottom: 15px;
+	background-color: #157cf8;
+}
+
+.exposure-report i {
+	font-size: 24px;
+	width: 62px;
+	line-height: 64px;
+	color: #fff;
+	text-align: center;
+}
+
+.my-exposure {
+	bottom: 94px;
+	background-color: #fff;
+	border: 1px solid #157cf8;
+}
+
+.my-exposure:active {
+	color: rgba(255, 255, 255, 0.6);
+	background-color: #eae5e5;
+	border: 1px solid #75b4ff;
+}
+
+.my-exposure i {
+	font-size: 24px;
+	width: 60px;
+	line-height: 62px;
+	color: #157cf8;
+	text-align: center;
+}
+
+.weui-event .weui-media-box__info {
+	margin: 0;
+}
+
+
+/***事件上报***/
+
+
+/*地图*/
+
+.weui-map {
+	position: relative;
+	width: 100%;
+	height: 240px;
+	background-color: #f9f9f9;
+}
+
+.weui-cells label {
+	font-size: 15px;
+	font-weight: normal;
+	color: #0e0e0e;
+	margin: 0;
+}
+
+.weui-cells p {
+	font-size: 14px;
+	font-weight: normal;
+	color: #555;
+	margin: 0;
+}
+
+.weui-img {
+	float: left;
+	margin-right: 8px;
+	margin-bottom: 8px;
+	width: 60px;
+	height: 60px;
+	background: no-repeat 50%;
+	background-size: cover;
+	border: 1px solid #e5e5e5;
+}
+
+.weui-voice {
+	float: left;
+	margin-right: 8px;
+	margin-bottom: 8px;
+	width: 32px;
+	height: 32px;
+	background: no-repeat 50%;
+	background-size: cover;
+}
+
+.weui-video {
+	float: left;
+	margin-right: 8px;
+	margin-bottom: 8px;
+	width: 32px;
+	height: 32px;
+	background: no-repeat 50%;
+	background-size: cover;
+}
+
+
+/*提交按钮*/
+
+.page__bd_spacing {
+	padding: 15px;
+}
+
+#typeParentDiv {
+	padding: 10px 0;
+}
+
+#typeChildDiv {
+	padding: 10px 0;
+}
+
+.treatButton {
+	font-size: 12px;
+}
+
+.treatButton .buttonList {
+	float: left;
+	margin: 3px 5px;
+	padding: 2px 5px;
+	font-size: 14px;
+	border: solid 1px #ededed;
+	border-radius: 4px;
+}
+
+.btnSelected {
+	color: #fff;
+	background-color: #0bb20c;
+}
+
+.childButtonList {
+	color: #fff;
+	background-color: #0bb20c;
+}
+
+.event-weui-loadmore {
+	margin-top: 105px;
+}
+
+.weui-status {
+	padding: 10px 0;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.weui-status-default {
+	color: #353535;
+}
+
+.weui-status-warn {
+	color: #CE3C39;
+}
+
+.weui-status-complete {
+	color: #969696;
+}
+
+.weui-status-primary {
+	color: #179B16;
+}
+
+
+/*封面图片张数*/
+
+.imgCount {
+	display: block;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	background-color: #000000;
+	/* IE6和部分IE7内核的浏览器(如QQ浏览器)下颜色被覆盖 */
+	background-color: rgba(0, 0, 0, 0.4);
+	/* IE6和部分IE7内核的浏览器(如QQ浏览器)会读懂，但解析为透明 */
+}
+
+.imgCount p {
+	margin: 0;
+	padding: 0;
+	font-size: 12px;
+	height: 25px;
+	line-height: 25px;
+	color: #FFFFFF;
+}
+
+.eventReport-submit a:active,
+.eventReport-submit a:hover {
+	background-color: #1e8c1d;
+	color: hsla(0, 0%, 100%, .6);
+	text-decoration: none;
+}
+
+.icon-box {
+	padding-right: 15px;
+	color: #969696;
+}
+
+.event-list-hd {
+	font-size: 15px;
+	font-weight: bold;
+	color: #333333;
+}
+
+.weui-cells .mapCover {
+	position: absolute;
+	width: 100%;
+	height: 40px;
+	font-size: 16px;
+	text-indent: 2em;
+	color: whitesmoke;
+	line-height: 40px;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.5);
+}
+
+.cover-hd {
+	position: absolute;
+	display: inline-block;
+	width: 215px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	left: -15px;
+}
+
+.cover-bd {
+	position: absolute;
+	text-indent: 1em;
+	right: 1em;
+}
+
+.voice-box {
+	margin: 0;
+}
+
+.voice-box span {
+	width: 50px;
+	height: 50px;
+	display: block;
+	line-height: 50px;
+	text-align: center;
+	background-color: #eaeaea;
+	border-radius: 50%;
+	border: solid 1px #eaeaea;
+	margin: 0 auto;
+}
+
+.voice-box span.toogleBtn {
+	width: 80px;
+	height: 80px;
+	display: block;
+	line-height: 90px;
+	text-align: center;
+	background-color: #eaeaea;
+	border-radius: 50%;
+	border: solid 1px #eaeaea;
+	margin: 0 auto;
+}
+
+.voiceWave {
+	position: relative;
+	width: 100%;
+	height: 120px;
+}
+
+.reply-box,
+.check-box {
+	margin: 10px 0;
+}
+
+.voice-box p {
+	font-size: 12px;
+	margin: 5px 0;
+}
+/*具体细节 */
+.concreteDetail{
+	position: relative;
+    width: 100%;
+    display: flex;
+    text-align: center;
+}
+
+.concreteDetail .left{
+    width: 40%;
+    text-align: right;
+}
+.concreteDetail .left span{
+    display: block;
+    font-size: 12px;
+    height: 40px;
+    line-height: 42px;
+}
+.concreteDetail .mid{
+    width: 10%;
+    text-align: center;
+}
+.concreteDetail .mid .circle{
+	width: 10px;
+    display: block;
+    background-color: cadetblue;
+    border-radius: 50%;
+    height: 10px;
+    margin: 0 auto;
+}
+.concreteDetail .mid .line{
+	display: block;
+    height: 50px;
+    width: 1px;
+    border-left: solid 2px cadetblue;
+    margin: 0 auto;
+}
+.concreteDetail .right{
+    width: 40%;
+    font-size: 12px;
+}
+.concreteDetail .right{
+    width: 40%;
+    font-size: 12px;
+}
+.concreteDetail .right .handlername{
+	display: block;
+    height: 31px;
+    line-height: 40px;
+    text-align: left;
+    word-wrap: break-word;
+}
+.concreteDetail .right .handlerstatus{
+    display: block;
+    text-align: left;
+    word-wrap: break-word;
+}
+.voiceTimeBox{
+    color: red;
+    font-size: 12px;
+    width: 100%;
+    height: 16px;
+    line-height: 16px;
+    margin: 5px 0;	
+	text-align: center;
+}
+.voiceTipshidden{
+	visibility: hidden;
+}
+.maxHeight{
+    max-height: 34px;
+}

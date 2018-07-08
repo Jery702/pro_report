@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="eventReport">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0' />
+		<title>上报事件</title>
+		<link rel="stylesheet" href="../../../../librarys/bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" href="../../../../librarys/weui/css/weui.min.css">
+		<link rel="stylesheet" href="../../../../css/app.css" type="text/css">
+		<link rel="stylesheet" href="../../css/event.css" type="text/css">
+		<link rel="stylesheet" href="../../../../librarys/font-awesome/css/font-awesome.min.css" type="text/css">
+	</head>
+	<body ng-controller="eventReportHomeCtrl" ng-cloak ng-init="eventInit()">
+		<form id="frmReport" method="post">
+			<input type="hidden" id="reportpersonid" name="reportpersonid" ng-value="reportpersonid">
+			<input type="hidden" id="longitude" name="longitude" ng-value="longitude">
+			<input type="hidden" id="latitude" name="latitude" ng-value="latitude">
+			<div class="weui-mask" ng-if="eventDialog"></div>
+			<div class="weui-dialog" ng-if="eventDialog">
+				<div class="weui-dialog__hd">
+					<strong class="weui-dialog__title">投诉须知</strong>
+				</div>
+				<div class="weui-dialog__bd txt-l" style="font-size: 13px;">
+					<p>1、地址不详，问题描述不清的不予受理；</p>
+					<p>2、尽量提供照片；</p>
+					<p>3、尽量打开手机GPS功能并点击获取位置；</p>
+				</div>
+				<div class="weui-dialog__ft">
+					<a href="javascript:void(0);" ng-click="closePopup()" class="weui-dialog__btn weui-dialog__btn_primary">确定</a>
+				</div>
+			</div>
+			<div class="page__bd">
+				<div class="weui-cells" style="margin: 0">
+					<div class="weui-cell weui-map" id="mapContainer">
+						<div id="getgeo" class="reLocation-box"></div>
+					</div>
+				</div>
+				<div class="weui-cell">
+					<div class="weui-cell__bd">
+						<input type="hidden" id="eventbelongcity" name="eventbelongcity">
+						<input type="hidden" id="eventbelongcounty" name="eventbelongcounty">
+						<input type="hidden" id="eventbelongtown" name="eventbelongtown">
+						<input type="text" id="address" name="address" class="weui-input" placeholder="请输入发生地点" />
+					</div>
+					<div class="weui-cell__ft">
+						<a href="javascript:void(0);" id="getgeo" class="fa fa-map-marker"></a>
+					</div>
+				</div>
+				<div id="typeParent" class="weui-cells__title event-list-hd">治水大类</div>
+				<div class="weui-cells weui-cells_form" id="typeParentDiv" class="parentContent">
+					<ul class="treatButton">
+						<li ng-repeat="item in parents" class="buttonList" ng-class="{'btnSelected':$index==selCont}" ng-model="parentName" ng-click="parentSelectContacter(item.id,$index,item.name)">{{item.name}}</li>
+					</ul>
+				</div>
+
+				<div id="typeChild" class="weui-cells__title event-list-hd">治水子类</div>
+				<div class="weui-cells weui-cells_form" id="typeChildDiv">
+					<ul class="treatButton">
+						<li ng-repeat="item in children" class="buttonList" ng-class="{'btnSelected':$index==childSelCont}" ng-model="childtName" ng-click="childSelectContacter(item.id,$index,item.name)">{{item.name}}</li>
+					</ul>
+				</div>
+
+				<div class="weui-cells__title event-list-hd">现场情况</div>
+				<div class="weui-cells weui-cells_form" id="uploader">
+					<div class="weui-cell">
+						<div class="weui-cell__bd">
+							<div class="weui-uploader">
+								<div class="weui-uploader__hd">
+									<p class="weui-uploader__title">图片上传</p>
+									<div id="many" class="weui_cell_ft js_counter">0/9</div>
+								</div>
+								<div class="weui-uploader__bd" id="uploadImgs">
+									<div class="weui-uploader__input-box" onclick="selectimg()" style="margin-top: 10px;">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="weui-cells weui-cells_form" id="uploader">
+					<div class="weui-cell">
+						<div class="weui-cell__bd">
+							<div class="weui-uploader">
+								<div class="weui-uploader__hd">
+									<p class="weui-uploader__title">语音上报</p>
+								</div>
+								<div class="weui-uploader__bd voice-box">
+									<div class="voiceWave">
+										<div class="waveWrapper waveAnimation">
+											<div class="waveWrapperInner bgTop">
+												<div class="wave waveTop" style="background-image: url(../../../../images/bases/wave-bot.png)"></div>
+											</div>
+											<div class="waveWrapperInner bgMiddle">
+												<div class="wave waveMiddle" style="background-image: url(../../../../images/bases/wave-mid.png)"></div>
+											</div>
+											<div class="waveWrapperInner bgBottom">
+												<div class="wave waveBottom" style="background-image: url(../../../../images/bases/wave-top.png)"></div>
+											</div>
+										</div>
+									</div>
+									<div class="page__bd page__bd_spacing">
+						                <button href="javascript:;" class="weui-btn weui-btn_plain-primary" >
+						                	<i class="fa fa-volume-up"></i><i id="voiceTime"></i>
+						                </button>
+						                <div class="voiceTimeBox voiceTipshidden"></div>
+						            </div>
+									<div class="weui-flex" style="text-align: center;margin-top: -15px;">
+										<div class="weui-flex__item">
+											<div class="placeholder reply-box">
+												<span id="delete"> <i id="deleteIcon" class="fa fa-remove"></i></span>
+												<p>移除</p>
+											</div>
+										</div>
+										<div class="weui-flex__item">
+											<div class="placeholder">
+												<span class="toogleBtn" id="talk_btn"> <i id="voiceIcon" class="fa fa-microphone-slash fa-2x "></i></span>
+												<p class="voiceTips">长按开始录音</p>
+											</div>  
+										</div>
+										<div class="weui-flex__item check-box">
+											<div class="placeholder">
+												<span id="play"> <i id="playIcon" class="fa fa-volume-up"></i></span>
+												<p class="tryListen">试听</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="weui-cells" style="font-size: 14px;">
+					<div class="weui-cell">
+						<div class="weui-cell__bd">
+							<textarea id="content" name="content" class="weui-textarea" ng-model="text" ng-change="checkText()" placeholder="简单描述污染情况" rows="4" title="只能输入100个字"></textarea>
+							<p>还可输入{{countNum}}个字</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="weui-cells" style="font-size: 14px;">
+					<div class="weui-cell weui-cell_switch">
+						<div class="weui-cell__bd event-list-hd">是否匿名</div>
+						<div class="weui-cell__ft">
+							<input ng-model="isPrivary" class="weui-switch" type="checkbox" />
+						</div>
+					</div>
+					<div ng-if="!isPrivary">
+						<div class="weui-cell">
+							<div class="weui-cell__bd">
+								<input type="text" id="reportperson" name="reportperson" ng-model="reportperson" class="weui-input" placeholder="请输入联系人" />
+							</div>
+						</div>
+						<div class="weui-cell">
+							<div class="weui-cell__bd">
+								<input type="text" id="reportphone" name="reportphone" ng-model="reportphone" value="" class="weui-input" placeholder="请输入联系电话" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="page__bd page__bd_spacing eventReport-submit">
+					<a href="javascript:void(0);" ng-click="submit()" class="weui-btn weui-btn_primary">提 交</a>
+				</div>
+		</form>
+		</div>
+
+		<script src="../../../../librarys/jquery/jquery.min.js"></script>
+		<script src="../../../../librarys/weui/js/zepto.min.js"></script>
+		<script src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+		<script src="../../../../librarys/jquery/jquery.min.js"></script>
+		<script src="../../../../librarys/weui/js/weui.js"></script>
+		<script src="../../../../librarys/angular/angular.min.js"></script>
+		<script src="http://map.qq.com/api/js?v=2.exp"></script>
+		<script src="../../../../librarys/layer/layer.js"></script>
+		<script src="../../../../js/main.js"></script>
+		<script src="../../../../js/map.js"></script>
+		<script src="../../../../js/imgUpload.js"></script>
+		<script src="../../js/eventReport/eventReport.js"></script>
+		<script>
+        //开始录音计时器初始化
+        var n= 0,s = 10, m ,timer=null;
+        var startTime=function( ){
+        	//执行前初始化
+        	$('#voiceTime').text('');
+        	m = 0;
+        	n = 0;
+        	s = 10;
+        	clearInterval(timer);
+        	//启动Timer
+	        timer=setInterval(function () {
+	            ++n;
+	            console.log(s)
+	            if (n > 50) {
+	            	--s;
+	            	if(!s){
+	            		s = 1;
+	            	}
+					$('.voiceTimeBox').removeClass('voiceTipshidden');
+		            $('.voiceTimeBox').text('你还可以说'+s+'s');
+			    }
+	            if(n == 60){
+		            $('.voiceTimeBox').text('录音已结束');
+		            if($('#voiceIcon').hasClass('fa-microphone')){
+        				$('#talk_btn').removeClass('voiceTouch');
+        				$('#voiceIcon').removeClass('fa-microphone voice-color').addClass('fa-microphone-slash');
+        				$('.voiceTips').text('长按开始录音');
+        			}
+        			$('.voiceTimeBox').addClass('voiceTipshidden');
+			    	clearInterval(timer);
+			    	wx.stopRecord({
+	                    success: function (res) {
+	                        localVoiceId = res.localId;
+	                        uploadVoice(localVoiceId);
+	                    },
+	                    fail: function (res) {
+	                        alert(JSON.stringify(res));
+	                    }
+	                });
+			    }
+	            m=parseInt(n);
+	            $('#voiceTime').text(m+'"');
+	        },1000);
+		}
+        //按下开始录音
+        $('#talk_btn').on('touchstart', function(event){
+        	if($('#voiceIcon').hasClass('fa-microphone-slash')){
+        		$('#talk_btn').addClass('voiceTouch');
+        		$('#voiceIcon').removeClass('fa-microphone-slash').addClass('fa-microphone voice-color');
+        		$('.voiceTips').text('正在录音');
+        	}else{
+        		$('#talk_btn').removeClass('voiceTouch');
+        		$('#voiceIcon').removeClass('fa-microphone voice-color').addClass('fa-microphone-slash');
+        		$('.voiceTips').text('长按开始录音');
+        	}
+        	//启动计时器
+        	startTime();
+            event.preventDefault();
+            START = new Date().getTime();
+            recordTimer = setTimeout(function(){
+                wx.startRecord({
+                    success: function(){
+                        localStorage.rainAllowRecord = 'true';
+                    },
+                    cancel: function () {
+                        alert('用户拒绝授权录音');
+                    }
+                });
+            },300);
+        });
+        
+        //松手结束录音
+        $('#talk_btn').on('touchend', function(event){
+        	if($('#voiceIcon').hasClass('fa-microphone')){
+        		$('#talk_btn').removeClass('voiceTouch');
+        		$('#voiceIcon').removeClass('fa-microphone voice-color').addClass('fa-microphone-slash');
+        		$('.voiceTips').text('长按开始录音');
+        	}
+        	
+			$('.voiceTimeBox').addClass('voiceTipshidden');
+			//清空计时器
+			clearInterval(timer);
+            event.preventDefault();
+            END = new Date().getTime();
+        	
+            if((END - START) < 1000){
+                END = 0;
+                START = 0;
+                //小于1s，不录音
+                layer.open({
+                    content: "录音时长过短，请重新录音!",
+                    time: 2
+                });
+                clearTimeout(recordTimer);
+            }else{
+                wx.stopRecord({
+                    success: function (res) {
+                        localVoiceId = res.localId;
+                        uploadVoice(localVoiceId);
+                    },
+                    fail: function (res) {
+                        alert(JSON.stringify(res));
+                    }
+                });
+            }
+        });
+		
+        //播放录音
+        $('#play').on('touchstart', function(){
+        	if($('#playIcon').hasClass('voice-color')){
+        		$('#playIcon').removeClass('voice-color');
+        	}else{
+        		$('#playIcon').addClass('voice-color');
+        	}
+        });
+        
+        $('#play').on('touchend', function(event){
+        	if($('#playIcon').hasClass('voice-color')){
+        		$('#playIcon').removeClass('voice-color');
+        	}
+            event.preventDefault();
+        	if(localVoiceId =='' || localVoiceId ==null || localVoiceId == undefined){
+        		layer.open({
+                    content: "暂无录音文件，请录音后再试听!",
+                    time: 2
+                });
+        	}else{
+        		wx.playVoice({
+        		    localId: localVoiceId // 需要播放的音频的本地ID，由stopRecord接口获得
+        		});
+        		$('.tryListen').text('暂停');
+        	}
+        });
+        
+        $('#delete').on('touchstart', function(){
+        	$('#voiceTime').text('');
+        	if($('#deleteIcon').hasClass('voice-color')){
+        		$('#deleteIcon').removeClass('voice-color');
+        	}else{
+        		$('#deleteIcon').addClass('voice-color');
+        	}
+        });
+        
+        $('#delete').on('touchend', function(event){
+        	if($('#deleteIcon').hasClass('voice-color')){
+        		$('#deleteIcon').removeClass('voice-color');
+        	}
+        	event.preventDefault();
+        	if(localVoiceId){
+        		layer.open({
+                    content: "音频已移除！",
+                    time: 2
+                });
+	            localVoiceId = '';
+        	}else{
+        		layer.open({
+                    content: "暂无录音文件，请先录制一条音频!",
+                    time: 2
+                });
+        	}
+        });
+        //上传录音
+        function uploadVoice(localVoiceId){
+            //alert("localId=" + localId);
+            //调用微信的上传录音接口把本地录音先上传到微信的服务器
+            //不过，微信只保留3天，而我们需要长期保存，我们需要把资源从微信服务器下载到自己的服务器
+            wx.uploadVoice({
+                localId: localVoiceId, // 需要上传的音频的本地ID，由stopRecord接口获得
+                isShowProgressTips: 1,// 默认为1，显示进度提示
+                success: function (res) {
+                    serverVoiceId = res.serverId; // 返回音频的服务器端ID
+                }
+            });
+        }
+    </script>
+	</body>
+
+</html>
